@@ -14,7 +14,7 @@ function Index(){
                     <nav className={styles.navbar}>
                         <ul className={styles.ul}>
                             <li className={styles.li}><a href="iniciosesion.html" className={styles.a}>Iniciar sesión</a></li>
-                            <li className={styles.li}><a href="#" className={styles.a}>ayuda</a></li>
+                            <li className={styles.li}><a href="#" className={styles.a}>Ayuda</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -22,7 +22,7 @@ function Index(){
                         <div className={styles.content}>
                             <h1 className={styles.h1}>TRAMITEWEB</h1>
                             <p className={styles.p}>
-                                Portal Web de Asignamiento y consulta de citas referentes a procesos de documentación con entidades del estado colombiano. 
+                                Portal Web de asignamiento y consulta de citas referentes a procesos de documentación con entidades del estado colombiano. 
                             </p>
                             <a href="registro.html" className={styles.btn1}>Registarme</a>
                         </div>
