@@ -1,0 +1,15 @@
+com\citizentech\presentacion\ServiciosUsuario.class
+com\citizentech\model\UsuarioTramite.class
+com\citizentech\model\Usuario.class
+com\citizentech\service\UsuarioDAO.class
+com\citizentech\service\UsuarioTramiteDAO.class
+com\citizentech\model\ListaUsuarioTramite.class
+com\CustomApplication.class
+com\citizentech\JAXRSConfiguration.class
+com\citizentech\presentacion\ServiciosUsuarioTramite.class
+com\citizentech\service\ConnectionHelper.class
+com\citizentech\service\InterfazUsuarioTramiteDAO.class
+com\citizentech\model\Respuesta.class
+com\citizentech\presentacion\CORSFilter.class
+com\citizentech\service\InterfazUsuarioDAO.class
+com\citizentech\resources\JavaEE8Resource.class
