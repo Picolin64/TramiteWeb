@@ -11,7 +11,7 @@ import Menu from "./components/Menu"
 function App() {
   const [auth, setAuth] = React.useState(false);
 
-  return <LibretaMilitar />
+  return <Index />
 }
 
 export default App;
