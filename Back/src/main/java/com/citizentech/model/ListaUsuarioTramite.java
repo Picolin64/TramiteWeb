@@ -1,9 +1,10 @@
 package com.citizentech.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class ListaUsuarioTramite {
+public class ListaUsuarioTramite implements Iterable<UsuarioTramite> {
     
     private List<UsuarioTramite> lista;
     
@@ -17,6 +18,11 @@ public class ListaUsuarioTramite {
 
     public void setLista(List<UsuarioTramite> lista) {
         this.lista = lista;
+    }
+
+    @Override
+    public Iterator<UsuarioTramite> iterator() {
+        return new UsuarioTramiteIterator(lista);
     }
 
 }
