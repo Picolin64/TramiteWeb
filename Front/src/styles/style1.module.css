@@ -23,16 +23,16 @@
     text-align: center;
 }
 
-.formContainer h2{
+.formContainer .h2{
     font-size: 40px;
     color:#F5FCFF;
     margin-bottom: 10px;
 }
 
-.formContainer p{
+.formContainer .p{
     font-size: 18px;
     color: #949FBD;
-    margin-bottom: 50px;
+    margin-top: 10px;
 }
 
 .form {
@@ -66,7 +66,6 @@
 .label{
     color:#f5fcff;
     font-size: 15px;
-    margin-bottom: 15px;
 }
 
 .input, .select, .textarea{
@@ -89,6 +88,7 @@
 }
 
 .btn {
+    margin: 15px;
     padding: 17px 25px;
     width: 180px;
     align-self: center;

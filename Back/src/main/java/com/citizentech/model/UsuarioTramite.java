@@ -1,10 +1,11 @@
 package com.citizentech.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
 public class UsuarioTramite {
+    
+    @JsonProperty("contador_registro")
+    private int contadorRegistro;
     @JsonProperty("id_usuario")
     private int idUsuario;
     @JsonProperty("id_tramite")
@@ -17,6 +18,16 @@ public class UsuarioTramite {
     private String nombreEntidad;
     @JsonProperty("fecha_registro")
     private String fechaRegistro;
+
+    @JsonProperty("contador_registro")
+    public int getContadorRegistro() {
+        return contadorRegistro;
+    }
+
+    @JsonProperty("contador_registro")
+    public void setContadorRegistro(int contadorRegistro) {
+        this.contadorRegistro = contadorRegistro;
+    }
 
     @JsonProperty("id_usuario")
     public int getIdUsuario() {

@@ -11,8 +11,6 @@ import javax.ws.rs.PathParam;
 
 import org.apache.log4j.Logger;
 
-import com.citizentech.model.ListaUsuarioTramite;
-import com.citizentech.model.Respuesta;
 import com.citizentech.service.InterfazUsuarioTramiteDAO;
 
 @Path("/usuariotramite")
@@ -30,34 +28,33 @@ public class ServiciosUsuarioTramite {
     @Path("/{id_usuario}")
     public Response getHistorialUsuarioTramite(@PathParam("id_usuario") int idUsuario) {
 
-        ListaUsuarioTramite listaUsuarioTramite = new ListaUsuarioTramite();
+        String respuestaJson;
 
         try {
-            listaUsuarioTramite.setLista(dao.historialUsuarioTramite(idUsuario));
+            respuestaJson = dao.historialUsuarioTramite(idUsuario);
         } catch (Exception e){
             logger.error(ERROR, e);
             throw new RuntimeException(e);
         }
         return Response.ok()    //200
-            .entity(listaUsuarioTramite)
+            .entity(respuestaJson)
             .allow(OPTIONS).build();
     }
-
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response postRegistrarUsuarioTramite(String usuarioTramiteJson) {
 
-        Respuesta respuesta;
+        String respuestaJson;
 
         try {
-            respuesta = dao.registrarUsuarioTramite(usuarioTramiteJson);
+            respuestaJson = dao.registrarUsuarioTramite(usuarioTramiteJson);
         } catch (Exception e){
             logger.error(ERROR, e);
             throw new RuntimeException(e);
         }
         return Response.ok()    //200
-            .entity(respuesta)
+            .entity(respuestaJson)
             .allow(OPTIONS).build();
     }
 }

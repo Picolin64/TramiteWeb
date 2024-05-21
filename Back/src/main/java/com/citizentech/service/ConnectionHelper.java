@@ -9,6 +9,7 @@ import java.io.InputStream;
 import org.apache.log4j.Logger;
 
 public class ConnectionHelper {
+    
     final static Logger logger = Logger.getLogger(ConnectionHelper.class);
     
     public static Connection getConnection() throws Exception {

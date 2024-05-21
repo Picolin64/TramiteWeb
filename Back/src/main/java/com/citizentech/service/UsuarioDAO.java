@@ -15,8 +15,12 @@ public class UsuarioDAO implements InterfazUsuarioDAO {
     static final Logger logger = Logger.getLogger(UsuarioDAO.class);
     private static final String ERROR = "Error";
 
+    private final String QRY_DATOS = ""
+        + " SELECT u.numero_identificacion, u.nombres, u.apellidos "
+        + "     FROM usuario u ";
+
     private final String QRY_INICIAR_SESION = ""
-        + " SELECT u.numero_identificacion, u.contraseña "
+        + " SELECT u.id_usuario, u.numero_identificacion, u.contraseña "
         + " FROM usuario u";
 
     private final String QRY_REGISTRAR = ""
@@ -24,12 +28,42 @@ public class UsuarioDAO implements InterfazUsuarioDAO {
         + "     apellidos, contraseña) ";
 
     @Override
-    public Respuesta iniciarSesion(String usuarioJson) {
+    public String obtenerDatosUsuario(int idUsuario) {
+        String sql = QRY_DATOS;
+        sql += " WHERE id_usuario = ? ";
+
+        Usuario respuestaUsuario;
+        String respuestaJson = "{\"estado\": \"fallido\"}";
+
+        try (Connection c = ConnectionHelper.getConnection();
+            PreparedStatement preparedStatement = c.prepareStatement(sql);){
+            ObjectMapper mapper = new ObjectMapper();
+
+            preparedStatement.setInt(1, idUsuario);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery();){
+                if (resultSet.next()){
+                    respuestaUsuario = procesarUsuario(resultSet);
+                    respuestaJson = mapper.writeValueAsString(respuestaUsuario);
+                }
+            } catch (Exception e){
+                logger.error(ERROR, e);
+            }
+        } catch (Exception e){
+            logger.error(ERROR, e);
+        }
+
+        return respuestaJson;
+    }
+
+    @Override
+    public String iniciarSesion(String usuarioJson) {
         String sql = QRY_INICIAR_SESION;
         sql += " WHERE numero_identificacion = ? ";
         sql += " AND contraseña = ? ";
 
-        Respuesta respuesta = procesarRespuesta(false, 0, 0, 0);
+        Respuesta respuesta;
+        String respuestaJson = "{\"estado\": \"fallido\"}";
 
         try (Connection c = ConnectionHelper.getConnection();
             PreparedStatement preparedStatement = c.prepareStatement(sql);){
@@ -41,7 +75,8 @@ public class UsuarioDAO implements InterfazUsuarioDAO {
             preparedStatement.setString(2, usuario.getContraseña());
 
             try (ResultSet resultSet = preparedStatement.executeQuery();){
-                respuesta = procesarRespuesta(resultSet.next(), 0, 0, 0);
+                respuesta = procesarRespuestaId(resultSet.next(), 0, 0, 0, resultSet);
+                respuestaJson = mapper.writeValueAsString(respuesta);
             } catch (Exception e){
                 logger.error(ERROR, e);
             }
@@ -49,17 +84,18 @@ public class UsuarioDAO implements InterfazUsuarioDAO {
             logger.error(ERROR, e);
         }
 
-        return respuesta;
+        return respuestaJson;
     }
 
     @Override
-    public Respuesta registrarUsuario(String usuarioJson) {
+    public String registrarUsuario(String usuarioJson) {
         String sql = QRY_REGISTRAR;
         sql += " VALUES (?, ?, ?, ?) ";
         sql += " ON CONFLICT DO NOTHING ";
 
         int resultado;
-        Respuesta respuesta = procesarRespuesta(false, 0, 0, 0);
+        Respuesta respuesta;
+        String respuestaJson = "{\"estado\": \"fallido\"}";
 
         try (Connection c = ConnectionHelper.getConnection();
             PreparedStatement preparedStatement = c.prepareStatement(sql);){
@@ -75,11 +111,28 @@ public class UsuarioDAO implements InterfazUsuarioDAO {
             resultado = preparedStatement.executeUpdate();
 
             respuesta = procesarRespuesta(resultado > 0, resultado, 0, 0);
+            respuestaJson = mapper.writeValueAsString(respuesta);
         } catch (Exception e){
             logger.error(ERROR, e);
         }
 
-        return respuesta;
+        return respuestaJson;
+    }
+
+    @Override
+    public Usuario procesarUsuario(ResultSet resultSet){
+        Usuario usuario = new Usuario();
+
+        try {
+            usuario.setNumeroIdentificacion(resultSet.getString("numero_identificacion"));
+            usuario.setNombres(resultSet.getString("nombres"));
+            usuario.setApellidos(resultSet.getString("apellidos"));
+            usuario.setContraseña(null);
+        } catch (Exception e){
+            logger.error(ERROR, e);
+        }
+
+        return usuario;
     }
 
     @Override
@@ -108,6 +161,49 @@ public class UsuarioDAO implements InterfazUsuarioDAO {
             respuesta.setRegistrosEliminados(null);
         } else {
             respuesta.setRegistrosEliminados(registrosEliminados);
+        }
+
+        respuesta.setIdUsuario(null);
+
+        return respuesta;
+    }
+
+    @Override
+    public Respuesta procesarRespuestaId(boolean exito, int registrosInsertados, int registrosActualizados, int registrosEliminados, ResultSet resultSet) {
+        Respuesta respuesta = new Respuesta();
+
+        if (exito){
+            respuesta.setEstado("exito");
+        } else {
+            respuesta.setEstado("fallido");
+        }
+        
+        if (registrosInsertados == 0){
+            respuesta.setRegistrosInsertados(null);
+        } else {
+            respuesta.setRegistrosInsertados(registrosInsertados);
+        }
+        
+        if (registrosActualizados == 0){
+            respuesta.setRegistrosActualizados(null);
+        } else {
+            respuesta.setRegistrosActualizados(registrosActualizados);
+        }
+        
+        if (registrosEliminados == 0) {
+            respuesta.setRegistrosEliminados(null);
+        } else {
+            respuesta.setRegistrosEliminados(registrosEliminados);
+        }
+
+        if (resultSet == null){
+            respuesta.setIdUsuario(null);
+        } else {
+            try {
+                respuesta.setIdUsuario(resultSet.getInt("id_usuario"));
+            } catch (Exception e) {
+                logger.error(ERROR, e);
+            }
         }
 
         return respuesta;

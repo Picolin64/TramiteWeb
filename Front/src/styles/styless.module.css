@@ -66,6 +66,7 @@ body{
 
 .menuLink:hover{
     background-color: #005D85;
+    cursor: pointer;
 }
 
 
@@ -104,6 +105,7 @@ body{
 
 .menuLinkInside:hover, .menuLinkMenuLinkInside:hover{
     background-color: #005D85;
+    cursor: pointer;
 }
 
 .menuHamburguer{

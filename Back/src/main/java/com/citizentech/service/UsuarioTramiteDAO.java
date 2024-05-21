@@ -17,6 +17,8 @@ public class UsuarioTramiteDAO implements InterfazUsuarioTramiteDAO{
     static final Logger logger = Logger.getLogger(UsuarioTramiteDAO.class);
     private static final String ERROR = "Error";
 
+    private int contadorRegistro = 0;
+
     private final String QRY_HISTORIAL_USUARIO_TRAMITE = ""
         + " SELECT u.id_usuario, t.id_tramite, t.nombre as nombre_tramite, e.id_entidad, e.nombre as nombre_entidad, "
         + "     to_char(ut.fecha_registro::date , 'DD-MM-YYYY') as fecha_registro"
@@ -30,13 +32,14 @@ public class UsuarioTramiteDAO implements InterfazUsuarioTramiteDAO{
         + " INSERT INTO public.usuario_tramite (id_usuario, id_tramite) ";
 
     @Override
-    public List<UsuarioTramite> historialUsuarioTramite(int idUsuario) {
+    public String historialUsuarioTramite(int idUsuario) {
         String sql = QRY_HISTORIAL_USUARIO_TRAMITE;
         sql += " AND u.id_usuario = ? ";
         sql += " ORDER BY ut.fecha_registro DESC " ;
         sql += " LIMIT 5";
 
         List<UsuarioTramite> listaUsuarioTramite = new ArrayList<>();
+        String listaUsuarioTramiteJson = "{\"estado\": \"fallido\"}";
 
         try (Connection c = ConnectionHelper.getConnection();
             PreparedStatement preparedStatement = c.prepareStatement(sql);){
@@ -48,24 +51,28 @@ public class UsuarioTramiteDAO implements InterfazUsuarioTramiteDAO{
                     UsuarioTramite usuarioTramite = procesarUsuarioTramite(resultSet);
 
                     listaUsuarioTramite.add(usuarioTramite);
+                    contadorRegistro++;
                 }
+
+                ObjectMapper mapper = new ObjectMapper();
+                listaUsuarioTramiteJson = mapper.writeValueAsString(listaUsuarioTramite);
             } catch (Exception e){
                 logger.error(ERROR, e);
             }
-            
         } catch (Exception e){
             logger.error(ERROR, e);
         }
 
-        return listaUsuarioTramite;
+        return listaUsuarioTramiteJson;
     }
 
     @Override
-    public Respuesta registrarUsuarioTramite(String usuarioTramiteJson) {
+    public String registrarUsuarioTramite(String usuarioTramiteJson) {
         String sql = QRY_REGISTRAR_USUARIO_TRAMITE;
         sql += " VALUES (?, ?) ";
 
-        Respuesta respuesta = procesarRespuesta(false, 0, 0, 0);
+        Respuesta respuesta;
+        String respuestaJson = "{\"estado\": \"fallido\"}";
         int resultado;
 
         try (Connection c = ConnectionHelper.getConnection();
@@ -80,11 +87,12 @@ public class UsuarioTramiteDAO implements InterfazUsuarioTramiteDAO{
             resultado = preparedStatement.executeUpdate();
 
             respuesta = procesarRespuesta(resultado > 0, resultado, 0, 0);
+            respuestaJson = mapper.writeValueAsString(respuesta);
         } catch (Exception e){
             logger.error(ERROR, e);
         }
 
-        return respuesta;
+        return respuestaJson;
     }
 
     @Override
@@ -92,6 +100,7 @@ public class UsuarioTramiteDAO implements InterfazUsuarioTramiteDAO{
         UsuarioTramite usuarioTramite = new UsuarioTramite();
 
         try {
+            usuarioTramite.setContadorRegistro(contadorRegistro);
             usuarioTramite.setIdUsuario(resultSet.getInt("id_usuario"));
             usuarioTramite.setIdTramite(resultSet.getInt("id_tramite"));
             usuarioTramite.setNombreTramite(resultSet.getString("nombre_tramite"));

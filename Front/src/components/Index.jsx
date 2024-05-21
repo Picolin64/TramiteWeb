@@ -1,20 +1,29 @@
-import React from "react";
 import styles from "../styles/style.module.css";
 
-function Index(){
+function Index({ setPagina }){
+    
+    function handleIniciarSesionClick(){
+        setPagina("InicioSesion");
+    }
+
+    function handleRegistrarClick() {
+        setPagina("Registro");
+    }
+
     return(
         <div className={styles.body}>
             <header className={styles.header}> 
                 <div className={styles.menuContainer}>
-                    <a href="#" className={styles.logo}></a>
+                    <a className={styles.logo}></a>
                     <input type="checkbox" id="menu" className={styles.input} />
                     <label htmlFor="menu" className={styles.menuLabel}>
                         <img src="/menu-btn.png" alt="" className={styles.menuIcono} />
                     </label>
                     <nav className={styles.navbar}>
                         <ul className={styles.ul}>
-                            <li className={styles.li}><a href="iniciosesion.html" className={styles.a}>Iniciar sesión</a></li>
-                            <li className={styles.li}><a href="#" className={styles.a}>Ayuda</a></li>
+                            <li className={styles.li}>
+                                <a onClick={handleIniciarSesionClick} className={styles.a}>Iniciar sesión</a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -24,7 +33,7 @@ function Index(){
                             <p className={styles.p}>
                                 Portal Web de asignamiento y consulta de citas referentes a procesos de documentación con entidades del estado colombiano. 
                             </p>
-                            <a href="registro.html" className={styles.btn1}>Registarme</a>
+                            <a onClick={handleRegistrarClick} className={styles.btn1}>Registarme</a>
                         </div>
                         <img src="/img-1.svg" alt="" className={styles.img} />
                 </div>

@@ -1,42 +1,68 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { instance as axios } from "../api/axios";
 import styles from "../styles/styless.module.css";
 
-function Menu() {
+function Menu({ setPagina }) {
+
+    const [nombreUsuario, setNombreUsuario] = useState("Usuario");
+
+    const idUsuario = sessionStorage.getItem("id_usuario");
+    const apiURL = "/tramiteweb/rest/usuario";
+
+    useEffect(() => {
+        obtenerDatosUsuarioLogueado();
+    }, []);
+
+    async function obtenerDatosUsuarioLogueado() {
+        const response = await axios.get(apiURL + "/" + idUsuario);
+        setNombreUsuario(response.data.nombres + " " + response.data.apellidos);
+    }
+
+    function handleRegistraduriaClick() {
+        setPagina("Registraduria");
+    }
+
+    function handleLibretaClick() {
+        setPagina("LibretaMilitar");
+    }
+
+    function handleHistorialClick() {
+        setPagina("Historial");
+    }
+
+    function handleCerrarSesionClick(){
+        sessionStorage.removeItem("id_usuario");
+        alert("Sesion cerrada.");
+        setPagina("Index");
+    }
+
     return (
         <div className={styles.body}>
             <nav className={styles.menu}>
                 <section className={styles.menuContainer}>
                     <ul className={styles.menuLinks}>
                         <li className={styles.menuItemMenuItemShow}>
-                            <a href="#" className={styles.menuLink}>Agendamiento de citas <img src="/arrow.svg" className={styles.menuArrow} /></a>
+                            <a className={styles.menuLink}>Agendamiento de citas <img src="/arrow.svg" className={styles.menuArrow} /></a>
                             <ul className={styles.menuNesting}>
                                 <li className={styles.menuInside}>
-                                    <a href="registraduria.html" className={styles.menuLinkMenuLinkInside}>Registraduria Nacional</a>
+                                    <a onClick={handleRegistraduriaClick} className={styles.menuLinkMenuLinkInside}>Registraduria Nacional</a>
                                 </li>
                                 <li className={styles.menuInside}>
-                                    <a href="libretamilitar.html" className={styles.menuLinkMenuLinkInside}>Libreta Militar</a>
+                                    <a onClick={handleLibretaClick} className={styles.menuLinkMenuLinkInside}>Libreta Militar</a>
                                 </li>
                             </ul>
                         </li>
                         <li className={styles.menuItem}>
-                            <a href="#" className={styles.menuLink}>Consultar citas pendientes</a>
+                            <a onClick={handleHistorialClick} className={styles.menuLink}>Consultar citas pendientes</a>
                         </li>
-                        <li className={styles.menuItemMenuItemShow}>
-                            <a href="#" className={styles.menuLink}>Ayuda<img src="/arrow.svg" className={styles.menuArrow} /></a>
-                            <ul className={styles.menuNesting}>
-                                <li className={styles.menuInside}>
-                                    <a href="#" className={styles.menuLinkMenuLinkInside}>Preguntas y respuestas</a>
-                                </li>
-                                <li className={styles.menuInside}>
-                                    <a href="index.html" className={styles.menuLinkMenuLinkInside}>Cerrar sesion</a>
-                                </li>
-                            </ul>
+                        <li className={styles.menuItem}>
+                            <a onClick={handleCerrarSesionClick} className={styles.menuLink}>Cerrar sesion</a>
                         </li>
                     </ul>
                     <div className={styles.menuHamburguer}>
                         <img src="/menu.svg" className={styles.menuImg} />
                     </div>
-                    <h1 className={styles.username}>Jordan Alex</h1>
+                    <h1 className={styles.username}>{nombreUsuario}</h1>
                 </section>
             </nav>
             <header className={styles.header}>
@@ -44,7 +70,7 @@ function Menu() {
                         <div className={styles.content}>
                             <h1 className={styles.h1}>TRAMITEWEB</h1>
                             <p className={styles.p}>
-                                Portal Web de Asignamiento y consulta de citas referentes a procesos de documentación con entidades del estado colombiano. 
+                                Portal web de asignamiento y consulta de citas referentes a procesos de documentación con entidades del estado colombiano. 
                             </p>
                         </div>
                         <img src="/img-1.svg" alt="" className={styles.headerContentImg} />

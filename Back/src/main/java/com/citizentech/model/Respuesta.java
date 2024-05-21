@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Respuesta {
+    
     @JsonProperty("estado")
     private String estado;
     @JsonProperty("registros_insertados")
@@ -13,6 +14,8 @@ public class Respuesta {
     private Integer registrosActualizados;
     @JsonProperty("registros_eliminados")
     private Integer registrosEliminados;
+    @JsonProperty("id_usuario")
+    private Integer idUsuario;
 
     @JsonProperty("estado")
     public String getEstado() {
@@ -52,5 +55,15 @@ public class Respuesta {
     @JsonProperty("registros_eliminados")
     public void setRegistrosEliminados(Integer filasEliminadas) {
         this.registrosEliminados = filasEliminadas;
+    }
+
+    @JsonProperty("id_usuario")
+    public Integer getIdUsuario() {
+        return idUsuario;
+    }
+
+    @JsonProperty("id_usuario")
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListaUsuarioTramite {
+    
     private List<UsuarioTramite> lista;
     
     public ListaUsuarioTramite(){

@@ -76,6 +76,7 @@
 
 .menuContainer .navbar .ul .li .a:hover {
     background-color: #3EDADD;
+    cursor: pointer;
 }
 
 .input {
@@ -128,6 +129,7 @@
 
 .btn1:hover { 
     background-color: #2ACCCF;
+    cursor:pointer
 }
 
 .services {
